@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense Tracker with Monthly Analytics</title>
+
+    <!-- ================= CSS ================= -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-container {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+  }
+
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            width: 150px;
+        }
+
+        button {
+            padding: 8px 15px;
+            cursor: pointer;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background-color: #0d47a1;
+        }
+
+        .analytics {
+            background: #e3f2fd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #1976d2;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Expense Tracker</h1>
+
+    
+    <div class="form-container">
+        <input type="number" id="amount" placeholder="Amount">
+
+        <select id="category">
+            <option value="">Select Category</option>
+            <option>Food</option>
+            <option>Transport</option>
+            <option>Shopping</option>
+            <option>Bills</option>
+            <option>Other</option>
+        </select>
+
+        <input type="date" id="date">
+        <input type="text" id="notes" placeholder="Notes">
+
+        <br><br>
+        <button onclick="addExpense()">Add Expense</button>
+    </div>
+
+    
+    <div class="analytics">
+        <h2>Monthly Analytics</h2>
+        <p id="totalExpense">Total Expense: ₹0</p>
+        <p id="highestCategory">Highest Spending Category: -</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody id="expenseTable"></tbody>
+    </table>
+
+    
+    <script>
+        
+        let expenses = [];
+
+        
+        function addExpense() {
+            const amount = Number(document.getElementById("amount").value);
+            const category = document.getElementById("category").value;
+            const date = document.getElementById("date").value;
+            const notes = document.getElementById("notes").value;
+ 
+            if (!amount || !category || !date) {
+                alert("Please fill all required fields");
+                return;
+            }
+
+            
+            const expense = {
+                amount,
+                category,
+                date,
+                notes
+            };
+
+            
+            expenses.push(expense);
+
+            displayExpenses();
+            calculateAnalytics();
+
+          
+            document.getElementById("amount").value = "";
+            document.getElementById("category").value = "";
+            document.getElementById("date").value = "";
+            document.getElementById("notes").value = "";
+        }
+
+        
+        function displayExpenses() {
+            const table = document.getElementById("expenseTable");
+            table.innerHTML = "";
+
+            expenses.forEach(exp => {
+                table.innerHTML += `
+                    <tr>
+                        <td>₹${exp.amount}</td>
+                        <td>${exp.category}</td>
+                        <td>${exp.date}</td>
+                        <td>${exp.notes}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        
+        function calculateAnalytics() {
+            let total = 0;
+            let categoryTotals = {};
+
+            expenses.forEach(exp => {
+                total += exp.amount;
+
+                categoryTotals[exp.category] =
+                    (categoryTotals[exp.category] || 0) + exp.amount;
+            });
+
+            document.getElementById("totalExpense").innerText =
+                "Total Expense: ₹" + total;
+
+            
+            let highestCategory = "-";
+            let highestAmount = 0;
+
+            for (let cat in categoryTotals) {
+                if (categoryTotals[cat] > highestAmount) {
+                    highestAmount = categoryTotals[cat];
+                    highestCategory = cat;
+                }
+            }
+
+            document.getElementById("highestCategory").innerText =
+                "Highest Spending Category: " + highestCategory;
+        }
+    </script>
+<script src="script.js"></script>
+</body>
+</html>
+ 
+
+        
+        
